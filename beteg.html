@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1B1C2E">
+<title>ቤተኛ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;600&family=Noto+Sans+Ethiopic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#EEF0F5; --surface:#FFFFFF; --ink:#1B1C2E; --muted:#686A80; --line:#DFE2EB;
+--accent:#D9482B; --accent-ink:#FFFFFF; --teal:#12877B; --danger:#C62F3E;
+--mine:#232540; --mine-ink:#F4F5FA; --theirs:#FFFFFF; --whoL:38%;
+--shadow:0 10px 34px rgba(27,28,46,.10);
+--f-display:'Bricolage Grotesque','Noto Sans Ethiopic',sans-serif;
+--f-body:'DM Sans','Noto Sans Ethiopic',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]){
+--bg:#0F1018; --surface:#181A27; --ink:#ECEDF5; --muted:#9496AC; --line:#272A3B;
+--accent:#FF6A47; --accent-ink:#1B0D08; --teal:#2FB5A6; --danger:#FF6B78;
+--mine:#33376B; --mine-ink:#F4F5FA; --theirs:#1F2233; --whoL:72%;
+--shadow:0 10px 34px rgba(0,0,0,.45); color-scheme:dark;
+}
+}
+:root[data-theme="dark"]{
+--bg:#0F1018; --surface:#181A27; --ink:#ECEDF5; --muted:#9496AC; --line:#272A3B;
+--accent:#FF6A47; --accent-ink:#1B0D08; --teal:#2FB5A6; --danger:#FF6B78;
+--mine:#33376B; --mine-ink:#F4F5FA; --theirs:#1F2233; --whoL:72%;
+--shadow:0 10px 34px rgba(0,0,0,.45); color-scheme:dark;
+}
+html{box-sizing:border-box}
+html,body{height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#app{height:100%;max-width:520px;margin:0 auto;position:relative;background:var(--bg);overflow:hidden;border-inline:1px solid var(--line)}
+.screen{height:100%;display:flex;flex-direction:column;min-height:0}
+.ic{display:inline-flex;flex:none}
+/* auth */
+.tilet{height:10px;flex:none;background:repeating-linear-gradient(90deg,var(--accent) 0 14px,var(--ink) 14px 18px,var(--teal) 18px 32px,var(--ink) 32px 36px)}
+.auth{flex:1;overflow-y:auto;padding:36px 20px 28px;display:flex;flex-direction:column;gap:26px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:76px;line-height:1;letter-spacing:-.02em;margin:0}
+.tag-line{color:var(--muted);margin:10px 0 0;max-width:30ch;text-wrap:balance}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{padding:10px;border-radius:10px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+form.stack{display:flex;flex-direction:column;gap:14px}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+label.f input{font-size:16px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-width:0}
+label.f input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.primary{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:14px;border-radius:14px;font-size:16px}
+.primary:active{transform:translateY(1px)}
+.err{margin:0;color:var(--danger);font-size:14px}
+.fine{color:var(--muted);font-size:13px;margin:0}
+/* top bars */
+.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.bar h1{font-family:var(--f-display);font-size:26px;letter-spacing:-.01em;margin:0;flex:1}
+.ibtn{width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+.ibtn:hover{background:var(--bg)}
+.av{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex:none;font-family:var(--f-display)}
+/* list */
+.list{flex:1;overflow-y:auto;padding:8px 8px 20px}
+.row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:12px 10px;border-radius:16px}
+.row:hover{background:var(--surface)}
+.row-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.row-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.row-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-time{font-size:12px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
+.row-sub{color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-block;background:var(--danger);color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;margin-right:6px}
+.demo-note{margin:6px 10px 10px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);color:var(--muted);font-size:13px}
+/* chat */
+.chat-head{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.chat-title{flex:1;min-width:0;display:flex;flex-direction:column}
+.chat-title b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-title span{font-size:12px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--teal);background:color-mix(in srgb,var(--teal) 14%,transparent);padding:3px 9px;border-radius:99px;flex:none}
+.msgs{flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px}
+.sys,.empty{align-self:center;text-align:center;color:var(--muted);font-size:13px;margin:8px 0;max-width:34ch}
+.msg{max-width:82%;min-width:0;padding:8px 12px 6px;display:flex;flex-direction:column;gap:3px;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--mine);color:var(--mine-ink);border-radius:18px 18px 4px 18px}
+.msg.them{align-self:flex-start;background:var(--theirs);border:1px solid var(--line);border-radius:18px 18px 18px 4px}
+.who{font-size:12px;font-weight:700}
+.txt{margin:0;white-space:pre-wrap}
+.photo{display:block;width:100%;max-width:260px;border-radius:12px;cursor:zoom-in;margin-top:2px}
+.msg audio{width:230px;max-width:100%;height:40px}
+.meta{align-self:flex-end;font-size:11px;opacity:.65;display:inline-flex;gap:4px;align-items:center;font-variant-numeric:tabular-nums}
+.composer{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);flex:none}
+.composer input[type=text]{flex:1;min-width:0;font-size:16px;padding:11px 16px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.composer input[type=text]:focus{outline:none;border-color:var(--accent)}
+.round{width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.round.go{background:var(--accent);color:var(--accent-ink)}
+.round.soft{background:var(--bg);color:var(--ink)}
+.rec{display:none;flex:1;align-items:center;gap:10px;color:var(--danger);font-weight:600}
+.rec i{width:10px;height:10px;border-radius:50%;background:var(--danger);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.composer.recording .rec{display:flex}
+.composer.recording input[type=text],.composer.recording #photoBtn,.composer.recording #sendBtn{display:none}
+.composer.recording #micBtn{background:var(--danger);color:#fff}
+.blocked-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--surface);border-top:1px solid var(--line);flex:none;color:var(--muted);font-size:14px}
+.blocked-bar button{color:var(--accent);font-weight:700}
+/* settings */
+.pad{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.profile{display:flex;align-items:center;gap:14px}
+.profile b{display:block;font-size:17px}
+.profile span{color:var(--muted);font-size:13px}
+h2.sec{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 -10px 4px}
+.line{display:flex;align-items:center;gap:12px}
+.line .grow{flex:1;min-width:0}
+.small-btn{padding:7px 14px;border-radius:99px;border:1px solid var(--line);font-weight:600;font-size:13px}
+.danger-btn{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);color:var(--danger);font-weight:600;text-align:left}
+.plain-btn{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-weight:600;text-align:left}
+/* sheet, lightbox, toast */
+.back{position:absolute;inset:0;background:rgba(10,10,20,.5);z-index:20;display:flex;align-items:flex-end}
+.sheet{width:100%;background:var(--surface);border-radius:24px 24px 0 0;padding:18px 16px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);animation:up .2s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:.6}}
+.sheet h3{margin:0 4px 2px;font-family:var(--f-display);font-size:20px}
+.sheet .note{margin:0 4px 6px;color:var(--muted);font-size:14px}
+.opt{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;text-align:left;width:100%;font-weight:500}
+.opt:hover{background:var(--bg)}
+.opt span{flex:1;min-width:0}
+.opt small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.opt.danger{color:var(--danger)}
+.opt.on{color:var(--teal);font-weight:700}
+.opt.cancel{justify-content:center;background:var(--bg);font-weight:600;margin-top:4px}
+.opt.cancel span{flex:none}
+.lightbox{position:absolute;inset:0;z-index:30;background:rgba(5,5,12,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.lightbox img{max-width:100%;max-height:100%;border-radius:12px}
+.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;max-width:90%;text-align:center}
+@media (prefers-reduced-motion:reduce){.sheet,.rec i{animation:none}}
+:root{color-scheme:light}
+body{margin:0}
+#app{height:100%;height:100dvh}
+.searchwrap{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.search{width:100%;font-size:16px;padding:11px 16px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.search:focus{outline:none;border-color:var(--accent)}
+.bar{padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.chat-head{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.composer,.blocked-bar{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.auth{padding-top:calc(36px + env(safe-area-inset-top,0px))}
+.primary:disabled{opacity:.6}
+</style>
+</head>
+<body>
+<div id="app">
+<section class="screen" id="setupScreen" hidden>
+<div class="tilet"></div>
+<div class="auth">
+<h1 class="brand">ቤተኛ</h1>
+<p class="tag-line">Firebase ገና አልተገናኘም። የ firebaseConfig እሴቶችን በ index.html ውስጥ ያስገቡ።</p>
+</div>
+</section>
+<section class="screen" id="authScreen" hidden>
+<div class="tilet"></div>
+<div class="auth">
+<header>
+<h1 class="brand">ቤተኛ</h1>
+<p class="tag-line">ከማህበረሰብህ ጋር በጽሑፍ፣ በፎቶ እና በድምፅ ተገናኝ።</p>
+</header>
+<form class="stack" id="authForm" novalidate>
+<div class="seg" role="tablist">
+<button type="button" id="tabIn" class="on" role="tab">ግባ</button>
+<button type="button" id="tabUp" role="tab">ተመዝገብ</button>
+</div>
+<label class="f" id="nameWrap" hidden>ስምህ<input id="fName" autocomplete="name"></label>
+<label class="f">የተጠቃሚ ስም<input id="fUser" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ለምሳሌ: abebe21"></label>
+<label class="f">የይለፍ ቃል<input id="fPass" type="password" autocomplete="current-password"></label>
+<p class="err" id="authErr" role="alert" hidden></p>
+<button class="primary" id="authBtn">ግባ</button>
+</form>
+<p class="fine">የተጠቃሚ ስምህ እንግሊዝኛ ፊደል እና ቁጥር ብቻ መያዝ አለበት። የይለፍ ቃል ከረሳህ ማስመለስ አይቻልም፤ ስለዚህ አስታውሰው።</p>
+</div>
+</section>
+<section class="screen" id="listScreen" hidden>
+<div class="tilet"></div>
+<div class="bar">
+<h1>ቤተኛ</h1>
+<button class="ibtn" id="newChat" aria-label="አዲስ ውይይት"></button>
+<button class="ibtn" id="openSettings" aria-label="ቅንብሮች"></button>
+</div>
+<div class="list" id="convList"></div>
+</section>
+<section class="screen" id="peopleScreen" hidden>
+<div class="bar">
+<button class="ibtn" id="peopleBack" aria-label="ተመለስ"></button>
+<h1>ሰዎች</h1>
+</div>
+<div class="searchwrap"><input type="search" id="peopleQ" class="search" placeholder="በስም ወይም በተጠቃሚ ስም ፈልግ" aria-label="ፈልግ"></div>
+<div class="list" id="peopleList"></div>
+</section>
+<section class="screen" id="chatScreen" hidden>
+<div class="chat-head">
+<button class="ibtn" id="chatBack" aria-label="ተመለስ"></button>
+<span id="chatAv"></span>
+<div class="chat-title"><b id="chatName"></b><span id="chatSub"></span></div>
+<span class="chip" id="timerChip" hidden></span>
+<button class="ibtn" id="chatMenu" aria-label="ተጨማሪ"></button>
+</div>
+<div class="msgs" id="msgs"></div>
+<div class="blocked-bar" id="blockedBar" hidden>
+<span>ይህ ሰው ታግዷል። መልዕክት መላክ አይቻልም።</span>
+<button id="unblockHere">አታግድ</button>
+</div>
+<form class="composer" id="composer" autocomplete="off">
+<button type="button" class="round soft" id="photoBtn" aria-label="ፎቶ ላክ"></button>
+<input type="text" id="txt" placeholder="መልዕክት ጻፍ" aria-label="መልዕክት" maxlength="2000">
+<div class="rec"><i></i><span id="recTime">0:00</span><span>እየቀረጸ ነው፤ ለመላክ ቁም ይንኩ</span></div>
+<button type="submit" class="round go" id="sendBtn" aria-label="ላክ" hidden></button>
+<button type="button" class="round go" id="micBtn" aria-label="የድምፅ መልዕክት"></button>
+</form>
+</section>
+<section class="screen" id="setScreen" hidden>
+<div class="bar">
+<button class="ibtn" id="setBack" aria-label="ተመለስ"></button>
+<h1>ቅንብሮች</h1>
+</div>
+<div class="pad" id="setBody"></div>
+</section>
+<div class="toast" id="toast" hidden></div>
+</div>
+<input type="file" id="photoIn" accept="image/*" hidden>
+<input type="file" id="audioIn" accept="audio/*" capture hidden>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc, collection, query, orderBy, limit, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+apiKey: "AIzaSyD18t-8iAzS_o94cPJ_izcTf36pKuIU6OE",
+authDomain: "beten-199df.firebaseapp.com",
+projectId: "beten-199df",
+appId: "1:694656904756:web:d357cb4098003e59f92461"
+};
+const $ = (s) => document.querySelector(s);
+function h(tag, props, ...kids){
+const e = document.createElement(tag);
+for (const [k, v] of Object.entries(props || {})){
+if (k === 'class') e.className = v;
+else if (k === 'on') for (const [ev, fn] of Object.entries(v)) e.addEventListener(ev, fn);
+else if (k === 'html') e.innerHTML = v;
+else if (v === true) e.setAttribute(k, '');
+else if (v !== false && v != null) e.setAttribute(k, v);
+}
+(function add(list){
+for (const kid of list){
+if (kid == null || kid === false) continue;
+if (Array.isArray(kid)) { add(kid); continue; }
+e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+}
+})(kids);
+return e;
+}
+const P = {
+send:'M22 2 11 13M22 2l-7 20-4-9-9-4z',
+mic:'M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v1a7 7 0 0 1-14 0v-1M12 18v4',
+stop:'M7 7h10v10H7z',
+img:'M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM21 16l-5-5-9 8',
+back:'M15 18l-6-6 6-6',
+more:'M12 5h.01M12 12h.01M12 19h.01',
+trash:'M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6',
+block:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM5.6 5.6l12.8 12.8',
+clock:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+user:'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+plus:'M12 5v14M5 12h14',
+out:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+check:'M5 12l5 5 9-10'
+};
+function icon(n, s = 22){
+return h('span', {class:'ic', html:`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`});
+}
+const fill = (sel, n, s) => $(sel).replaceChildren(icon(n, s));
+const TIMERS = [
+{l:'ጠፍቷል', ms:0}, {l:'1 ደቂቃ (ለሙከራ)', ms:60000}, {l:'1 ሰዓት', ms:3600000},
+{l:'24 ሰዓት', ms:86400000}, {l:'7 ቀን', ms:604800000}
+];
+const timerLabel = (ms) => (TIMERS.find(t => t.ms === ms) || {l:''}).l;
+const EMAIL = '@beteg.app';
+let auth, db;
+let me = null, meName = '', people = {}, blocked = new Set(), cleared = {}, chats = {}, comm = null;
+let cur = null, msgs = [], unsubs = [], unsubMsgs = null, pendingName = null, authMode = 'in', rec = null, shownPerm = false;
+const fmt = (t) => new Date(t).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+const dmId = (a, b) => [a, b].sort().join('_');
+const otherOf = (id) => { const m = (chats[id] && chats[id].members) || id.split('_'); return m.find(x => x !== me); };
+const nameOf = (u) => (people[u] && people[u].name) || 'ተጠቃሚ';
+const hueOf = (u) => { let x = 0; for (const c of String(u)) x = (x * 31 + c.charCodeAt(0)) % 360; return x; };
+const chatData = (id) => id === 'community' ? comm : chats[id];
+const toMs = (v) => v && v.toMillis ? v.toMillis() : 0;
+function toast(msg){
+const t = $('#toast'); t.textContent = msg; t.hidden = false;
+clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 3400);
+}
+function errH(e){
+console.error(e);
+if (e && e.code === 'permission-denied' && !shownPerm){ shownPerm = true; toast('ፈቃድ የለም። የ Firestore ህጎች በትክክል መቀመጣቸውን ያረጋግጡ።'); }
+}
+function show(id){ document.querySelectorAll('.screen').forEach(s => { s.hidden = s.id !== id; }); }
+function avatar(name, hue, size){
+return h('span', {class:'av', style:`width:${size}px;height:${size}px;font-size:${Math.round(size*0.42)}px;background:hsl(${hue} 52% 40%)`}, Array.from(name || '?')[0]);
+}
+const visible = (m) => (m.from === me || !blocked.has(m.from)) && m.t > (cleared[cur] || 0) && (!m.exp || m.exp > Date.now());
+function setMode(mode){
+authMode = mode;
+$('#tabIn').classList.toggle('on', mode === 'in');
+$('#tabUp').classList.toggle('on', mode === 'up');
+$('#nameWrap').hidden = mode !== 'up';
+$('#authBtn').textContent = mode === 'in' ? 'ግባ' : 'መለያ ክፈት';
+$('#fPass').setAttribute('autocomplete', mode === 'in' ? 'current-password' : 'new-password');
+$('#authErr').hidden = true;
+}
+function authError(msg){ const e = $('#authErr'); e.textContent = msg; e.hidden = false; }
+function authMsg(e){
+const c = e && e.code;
+if (c === 'auth/email-already-in-use') return 'ይህ የተጠቃሚ ስም ተይዟል። ሌላ ምረጥ።';
+if (c === 'auth/invalid-credential' || c === 'auth/wrong-password' || c === 'auth/user-not-found') return 'የተጠቃሚ ስሙ ወይም የይለፍ ቃሉ ትክክል አይደለም።';
+if (c === 'auth/weak-password') return 'የይለፍ ቃል ቢያንስ 6 ቁምፊ መሆን አለበት።';
+if (c === 'auth/too-many-requests') return 'ብዙ ሙከራ ተደርጓል። ጥቂት ቆይተህ ሞክር።';
+if (c === 'auth/network-request-failed') return 'ኢንተርኔት የለም። ግንኙነትህን አረጋግጥ።';
+if (c === 'auth/operation-not-allowed') return 'በ Firebase ውስጥ Email/Password መግቢያ አልበራም።';
+return 'አልተሳካም። እንደገና ሞክር።';
+}
+$('#tabIn').addEventListener('click', () => setMode('in'));
+$('#tabUp').addEventListener('click', () => setMode('up'));
+$('#authForm').addEventListener('submit', async (ev) => {
+ev.preventDefault();
+const u = $('#fUser').value.trim().toLowerCase(), p = $('#fPass').value, nm = $('#fName').value.trim();
+if (!/^[a-z0-9_.]{3,24}$/.test(u)) return authError('የተጠቃሚ ስም 3-24 የእንግሊዝኛ ፊደል፣ ቁጥር፣ _ ወይም . ብቻ መያዝ አለበት።');
+if (p.length < 6) return authError('የይለፍ ቃል ቢያንስ 6 ቁምፊ መሆን አለበት።');
+$('#authBtn').disabled = true;
+try {
+if (authMode === 'up'){
+if (!nm) { authError('እባክህ ስምህን ጻፍ።'); return; }
+pendingName = nm;
+await createUserWithEmailAndPassword(auth, u + EMAIL, p);
+} else {
+await signInWithEmailAndPassword(auth, u + EMAIL, p);
+}
+$('#authErr').hidden = true;
+} catch (e) { pendingName = null; authError(authMsg(e)); }
+finally { $('#authBtn').disabled = false; }
+});
+async function startSession(user){
+me = user.uid;
+const uname = (user.email || '').replace(EMAIL, '');
+const uref = doc(db, 'users', me);
+try {
+const s = await getDoc(uref);
+if (!s.exists()) await setDoc(uref, {name: pendingName || uname, username: uname, createdAt: serverTimestamp(), cleared: {}});
+} catch (e) { errH(e); }
+pendingName = null;
+unsubs.push(onSnapshot(uref, (s) => { const d = s.data() || {}; meName = d.name || uname; cleared = d.cleared || {}; rerender(); }, errH));
+unsubs.push(onSnapshot(collection(uref, 'blocked'), (s) => { blocked = new Set(s.docs.map(d => d.id)); rerender(); }, errH));
+unsubs.push(onSnapshot(query(collection(db, 'users'), limit(300)), (s) => { people = {}; s.docs.forEach(d => { people[d.id] = d.data(); }); rerender(); }, errH));
+unsubs.push(onSnapshot(query(collection(db, 'chats'), where('members', 'array-contains', me)), (s) => { chats = {}; s.docs.forEach(d => { chats[d.id] = d.data({serverTimestamps:'estimate'}); }); rerender(); }, errH));
+unsubs.push(onSnapshot(doc(db, 'chats', 'community'), (s) => { comm = s.exists() ? s.data({serverTimestamps:'estimate'}) : null; rerender(); }, errH));
+show('listScreen');
+}
+function endSession(){
+unsubs.forEach(f => f()); unsubs = [];
+if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; }
+me = null; cur = null; msgs = []; people = {}; blocked = new Set(); cleared = {}; chats = {}; comm = null;
+$('#fPass').value = ''; setMode('in'); show('authScreen');
+}
+function rerender(){
+if (!me) return;
+if (!$('#listScreen').hidden) renderList();
+if (!$('#chatScreen').hidden) renderChat(false);
+if (!$('#setScreen').hidden) renderSettings();
+if (!$('#peopleScreen').hidden) renderPeople();
+}
+function previewOf(d, id){
+if (!d || !d.lastT || toMs(d.lastT) <= (cleared[id] || 0)) return 'መልዕክት የለም';
+if (d.lastFrom !== me && blocked.has(d.lastFrom)) return 'መልዕክት የለም';
+const who = d.lastFrom === me ? 'አንተ: ' : (id === 'community' ? nameOf(d.lastFrom).split(' ')[0] + ': ' : '');
+const what = d.lastType === 'photo' ? 'ፎቶ' : d.lastType === 'audio' ? 'የድምፅ መልዕክት' : (d.lastText || '');
+return who + what;
+}
+function renderList(){
+const box = $('#convList'); box.replaceChildren();
+const dms = Object.keys(chats).filter(id => id !== 'community' && chats[id].lastT).map(id => {
+const o = otherOf(id);
+return {id, name:nameOf(o), hue:hueOf(o), d:chats[id], other:o};
+}).sort((a, b) => toMs(b.d.lastT) - toMs(a.d.lastT));
+const rows = [{id:'community', name:'ማህበረሰብ', hue:262, d:comm, group:true}, ...dms];
+rows.forEach(r => {
+const isBl = r.other && blocked.has(r.other);
+const t = r.d && r.d.lastT && toMs(r.d.lastT) > (cleared[r.id] || 0) ? fmt(toMs(r.d.lastT)) : null;
+box.append(h('button', {class:'row', on:{click:() => openChat(r.id)}},
+avatar(r.name, r.hue, 48),
+h('span', {class:'row-main'},
+h('span', {class:'row-top'}, h('span', {class:'row-name'}, r.name), t ? h('time', {class:'row-time'}, t) : null),
+h('span', {class:'row-sub'}, isBl ? h('span', {class:'tag'}, 'ታግዷል') : null, isBl ? '' : previewOf(r.d, r.id)))));
+});
+if (rows.length === 1) box.append(h('p', {class:'demo-note'}, 'ከሌሎች ጋር በግል ለመወያየት ከላይ ያለውን + ተጫን።'));
+}
+function renderPeople(){
+const q = $('#peopleQ').value.trim().toLowerCase(), box = $('#peopleList'); box.replaceChildren();
+const list = Object.keys(people).filter(u => u !== me).filter(u => {
+const p = people[u]; return !q || (p.name || '').toLowerCase().includes(q) || (p.username || '').includes(q);
+}).sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
+if (!list.length) box.append(h('p', {class:'empty'}, q ? 'ማንም አልተገኘም።' : 'እስካሁን ሌላ ተጠቃሚ የለም። ሊንኩን ለጓደኞችህ ላክ።'));
+list.forEach(u => box.append(h('button', {class:'row', on:{click:() => openChat(dmId(me, u))}},
+avatar(nameOf(u), hueOf(u), 44),
+h('span', {class:'row-main'}, h('span', {class:'row-name'}, nameOf(u)), h('span', {class:'row-sub'}, '@' + (people[u].username || ''))))));
+}
+$('#newChat').addEventListener('click', () => { $('#peopleQ').value = ''; renderPeople(); show('peopleScreen'); });
+$('#peopleQ').addEventListener('input', renderPeople);
+$('#peopleBack').addEventListener('click', () => show('listScreen'));
+async function openChat(id){
+cur = id;
+const isGroup = id === 'community';
+if (!isGroup && !chats[id]){
+try { await setDoc(doc(db, 'chats', id), {members:id.split('_')}, {merge:true}); } catch (e) { errH(e); toast('ውይይቱን መክፈት አልተቻለም።'); cur = null; return; }
+}
+const o = isGroup ? null : otherOf(id);
+$('#chatAv').replaceChildren(isGroup ? avatar('ማ', 262, 40) : avatar(nameOf(o), hueOf(o), 40));
+$('#chatName').textContent = isGroup ? 'ማህበረሰብ' : nameOf(o);
+$('#txt').value = ''; syncBtn();
+msgs = [];
+if (unsubMsgs) unsubMsgs();
+unsubMsgs = onSnapshot(query(collection(db, 'chats', id, 'messages'), orderBy('t', 'desc'), limit(120)), (s) => {
+msgs = s.docs.map(d => { const x = d.data({serverTimestamps:'estimate'}); return {...x, id:d.id, t:toMs(x.t) || Date.now()}; }).reverse();
+renderChat(true); sweep();
+}, errH);
+renderChat(true);
+show('chatScreen');
+}
+function bubble(m){
+const mine = m.from === me, body = [];
+if (cur === 'community' && !mine) body.push(h('span', {class:'who', style:`color:hsl(${hueOf(m.from)} 62% var(--whoL))`}, nameOf(m.from)));
+if (m.type === 'text') body.push(h('p', {class:'txt'}, m.text));
+if (m.type === 'photo') body.push(h('img', {class:'photo', src:m.src, alt:'የተላከ ፎቶ', on:{click:() => lightbox(m.src)}}));
+if (m.type === 'audio') body.push(h('audio', {controls:true, preload:'metadata', src:m.src}));
+body.push(h('span', {class:'meta'}, m.exp ? icon('clock', 11) : null, fmt(m.t)));
+return h('div', {class:'msg ' + (mine ? 'me' : 'them')}, body);
+}
+function renderChat(scroll){
+if (!cur) return;
+const box = $('#msgs');
+const atEnd = scroll || box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+box.replaceChildren();
+const d = chatData(cur) || {}, timer = d.timer || 0, vis = msgs.filter(visible);
+if (timer) box.append(h('p', {class:'sys'}, 'አዳዲስ መልዕክቶች ከ ' + timerLabel(timer).replace(' (ለሙከራ)', '') + ' በኋላ ይጠፋሉ።'));
+if (!vis.length) box.append(h('p', {class:'empty'}, 'መልዕክት የለም። የመጀመሪያውን ላክ።'));
+vis.forEach(m => box.append(bubble(m)));
+if (atEnd) box.scrollTop = box.scrollHeight;
+const chip = $('#timerChip'); chip.hidden = !timer;
+chip.replaceChildren(icon('clock', 13), timerLabel(timer).replace(' (ለሙከራ)', ''));
+const isDm = cur !== 'community', o = isDm ? otherOf(cur) : null, isBl = isDm && blocked.has(o);
+$('#blockedBar').hidden = !isBl; $('#composer').hidden = isBl;
+$('#chatSub').textContent = isDm ? (isBl ? 'ታግዷል' : '@' + ((people[o] || {}).username || '')) : Object.keys(people).length + ' አባላት';
+if (isDm) { $('#chatName').textContent = nameOf(o); }
+}
+function sweep(){
+const now = Date.now();
+msgs.filter(m => m.from === me && m.exp && m.exp < now && cur).forEach(m => deleteDoc(doc(db, 'chats', cur, 'messages', m.id)).catch(() => {}));
+}
+setInterval(() => { if (me && cur && !$('#chatScreen').hidden){ renderChat(false); sweep(); } }, 5000);
+function syncBtn(){
+const has = $('#txt').value.trim().length > 0;
+$('#sendBtn').hidden = !has; $('#micBtn').hidden = has;
+}
+async function send(type, payload, lastText){
+const id = cur, d = chatData(id) || {}, now = Date.now(), timer = d.timer || 0;
+try {
+await addDoc(collection(db, 'chats', id, 'messages'), {from:me, type, ...payload, t:serverTimestamp(), exp:timer ? now + timer : 0});
+await setDoc(doc(db, 'chats', id), {lastType:type, lastText:lastText || '', lastFrom:me, lastT:serverTimestamp()}, {merge:true});
+} catch (e) { errH(e); toast('መልዕክቱ አልተላከም።'); }
+}
+$('#composer').addEventListener('submit', (ev) => {
+ev.preventDefault();
+const v = $('#txt').value.trim(); if (!v) return;
+$('#txt').value = ''; syncBtn();
+send('text', {text:v}, v.slice(0, 120));
+});
+$('#txt').addEventListener('input', syncBtn);
+/* photo */
+function shrink(file){
+return new Promise((res, rej) => {
+const url = URL.createObjectURL(file), im = new Image();
+im.onload = () => {
+URL.revokeObjectURL(url);
+for (const [max, q] of [[800, .62], [640, .5], [480, .45]]){
+const r = Math.min(1, max / Math.max(im.width, im.height));
+const cv = document.createElement('canvas');
+cv.width = Math.round(im.width * r); cv.height = Math.round(im.height * r);
+cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+const out = cv.toDataURL('image/jpeg', q);
+if (out.length < 330000) return res(out);
+}
+rej();
+};
+im.onerror = () => { URL.revokeObjectURL(url); rej(); };
+im.src = url;
+});
+}
+$('#photoBtn').addEventListener('click', () => $('#photoIn').click());
+$('#photoIn').addEventListener('change', async (ev) => {
+const f = ev.target.files[0]; ev.target.value = ''; if (!f) return;
+try { send('photo', {src:await shrink(f)}, ''); } catch (e) { toast('ፎቶውን ማዘጋጀት አልተቻለም።'); }
+});
+/* voice */
+function sendAudio(blob){
+const fr = new FileReader();
+fr.onload = () => {
+if (fr.result.length > 700000) return toast('የድምፅ መልዕክቱ በጣም ረጅም ነው። አጠር አድርገህ ሞክር።');
+send('audio', {src:fr.result}, '');
+};
+fr.readAsDataURL(blob);
+}
+function setRecUI(on){ $('#composer').classList.toggle('recording', on); fill('#micBtn', on ? 'stop' : 'mic'); }
+$('#micBtn').addEventListener('click', async () => {
+if (rec){ rec.mr.stop(); return; }
+if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder)){ $('#audioIn').click(); return; }
+let stream;
+try { stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
+catch (e) { toast('ማይክሮፎን አልተፈቀደም። የድምፅ ፋይል ምረጥ።'); $('#audioIn').click(); return; }
+const mr = new MediaRecorder(stream, {audioBitsPerSecond:24000}), chunks = [], start = Date.now();
+mr.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+mr.onstop = () => {
+stream.getTracks().forEach(t => t.stop());
+clearInterval(rec.iv); rec = null; setRecUI(false);
+sendAudio(new Blob(chunks, {type:mr.mimeType || 'audio/webm'}));
+};
+rec = {mr, iv:setInterval(() => {
+const s = Math.floor((Date.now() - start) / 1000);
+$('#recTime').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+if (s >= 90) mr.stop();
+}, 250)};
+$('#recTime').textContent = '0:00'; mr.start(); setRecUI(true);
+});
+$('#audioIn').addEventListener('change', (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) sendAudio(f); });
+function closeSheet(){ const b = $('.back'); if (b) b.remove(); const l = $('.lightbox'); if (l) l.remove(); }
+function sheet(title, items, note){
+closeSheet();
+const back = h('div', {class:'back', on:{click:(e) => { if (e.target === back) closeSheet(); }}},
+h('div', {class:'sheet', role:'dialog', 'aria-label':title},
+h('h3', {}, title), note ? h('p', {class:'note'}, note) : null,
+items.map(it => h('button', {class:'opt' + (it.danger ? ' danger' : '') + (it.on ? ' on' : ''), on:{click:() => { closeSheet(); if (it.fn) it.fn(); }}},
+it.icon ? icon(it.icon, 20) : null, h('span', {}, it.label, it.sub ? h('small', {}, it.sub) : null), it.on ? icon('check', 18) : null)),
+h('button', {class:'opt cancel', on:{click:closeSheet}}, h('span', {}, 'ተመለስ'))));
+$('#app').append(back);
+}
+function lightbox(src){ closeSheet(); $('#app').append(h('div', {class:'lightbox', on:{click:closeSheet}}, h('img', {src, alt:'ፎቶ'}))); }
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+const uref = () => doc(db, 'users', me);
+async function clearChat(id){
+try { await updateDoc(uref(), {cleared:{...cleared, [id]:Date.now()}}); toast('ታሪኩ ተሰርዟል።'); } catch (e) { errH(e); toast('አልተሳካም።'); }
+}
+async function clearAll(){
+const next = {...cleared}, now = Date.now();
+next.community = now; Object.keys(chats).forEach(id => { next[id] = now; });
+try { await updateDoc(uref(), {cleared:next}); toast('ሁሉም ታሪክ ተሰርዟል።'); } catch (e) { errH(e); toast('አልተሳካም።'); }
+}
+async function setBlocked(u, on){
+try {
+const r = doc(db, 'users', me, 'blocked', u);
+if (on) await setDoc(r, {t:serverTimestamp()}); else await deleteDoc(r);
+toast(on ? nameOf(u) + ' ታግዷል።' : nameOf(u) + ' ተፈቷል።');
+} catch (e) { errH(e); toast('አልተሳካም።'); }
+}
+function timerSheet(){
+const cur0 = (chatData(cur) || {}).timer || 0;
+sheet('የሚጠፉ መልዕክቶች', TIMERS.map(t => ({label:t.l, on:cur0 === t.ms, fn:async () => {
+try { await updateDoc(doc(db, 'chats', cur), {timer:t.ms}); } catch (e) { errH(e); toast('አልተሳካም።'); }
+}})), 'ከዚህ በኋላ የሚላኩ መልዕክቶች ከተመረጠው ጊዜ በኋላ በራሳቸው ይጠፋሉ። ሁለቱም ሰዎች ይህን ማስተካከል ይችላሉ።');
+}
+$('#chatMenu').addEventListener('click', () => {
+const isDm = cur !== 'community', o = isDm ? otherOf(cur) : null, title = isDm ? nameOf(o) : 'ማህበረሰብ';
+const items = [];
+if (isDm) items.push({label:'የሚጠፉ መልዕክቶች', sub:timerLabel((chatData(cur) || {}).timer || 0), icon:'clock', fn:timerSheet});
+items.push({label:'የዚህን ውይይት ታሪክ አጥፋ', icon:'trash', danger:true, fn:() => {
+sheet('ይህን ታሪክ ይጥፋ?', [{label:'አዎ፣ አጥፋ', icon:'trash', danger:true, fn:() => clearChat(cur)}], 'ታሪኩ ከአንተ ስልክ ብቻ ይጠፋል። ሌሎች ሰዎች አሁንም ያዩታል።');
+}});
+if (isDm){
+if (blocked.has(o)) items.push({label:'አታግድ', icon:'block', fn:() => setBlocked(o, false)});
+else items.push({label:nameOf(o) + ' ን አግድ', icon:'block', danger:true, fn:() => {
+sheet(nameOf(o) + ' ይታገድ?', [{label:'አዎ፣ አግድ', icon:'block', danger:true, fn:() => setBlocked(o, true)}], 'መልዕክቱን አታይም፣ እሱም ወደ አንተ መልዕክት መላክ አይችልም። በማንኛውም ጊዜ መፍታት ትችላለህ።');
+}});
+}
+sheet(title, items);
+});
+$('#unblockHere').addEventListener('click', () => setBlocked(otherOf(cur), false));
+$('#chatBack').addEventListener('click', () => { if (unsubMsgs){ unsubMsgs(); unsubMsgs = null; } cur = null; msgs = []; renderList(); show('listScreen'); });
+function renderSettings(){
+const box = $('#setBody'), un = (people[me] && people[me].username) || '';
+box.replaceChildren(
+h('div', {class:'card'}, h('div', {class:'profile'}, avatar(meName, hueOf(me), 54), h('div', {}, h('b', {}, meName), h('span', {}, '@' + un)))),
+h('h2', {class:'sec'}, 'የታገዱ ሰዎች'),
+h('div', {class:'card'}, blocked.size
+? [...blocked].map(u => h('div', {class:'line'}, avatar(nameOf(u), hueOf(u), 38), h('span', {class:'grow'}, nameOf(u)),
+h('button', {class:'small-btn', on:{click:() => setBlocked(u, false)}}, 'አታግድ')))
+: h('p', {class:'fine'}, 'ማንም አልታገደም። በግል ውይይት ውስጥ ከ ⋯ ምናሌ ማገድ ትችላለህ።')),
+h('h2', {class:'sec'}, 'ታሪክ'),
+h('button', {class:'danger-btn', on:{click:() => sheet('ሁሉም ታሪክ ይጥፋ?', [{label:'አዎ፣ ሁሉንም አጥፋ', icon:'trash', danger:true, fn:clearAll}], 'በሁሉም ውይይቶች ያለው ታሪክ ከአንተ ስልክ ይጠፋል። ሌሎች ሰዎች አሁንም ያዩታል።')}}, icon('trash', 20), 'ሁሉንም ውይይት አጥፋ'),
+h('button', {class:'plain-btn', on:{click:() => signOut(auth)}}, icon('out', 20), 'ውጣ'));
+}
+$('#openSettings').addEventListener('click', () => { renderSettings(); show('setScreen'); });
+$('#setBack').addEventListener('click', () => { renderList(); show('listScreen'); });
+fill('#newChat', 'plus', 22); fill('#openSettings', 'user', 22);
+fill('#peopleBack', 'back', 24); fill('#chatBack', 'back', 24); fill('#chatMenu', 'more', 22); fill('#setBack', 'back', 24);
+fill('#photoBtn', 'img', 22); fill('#sendBtn', 'send', 20); fill('#micBtn', 'mic', 22);
+setMode('in');
+if (/^__/.test(firebaseConfig.apiKey)){
+show('setupScreen');
+} else {
+const app = initializeApp(firebaseConfig);
+auth = getAuth(app); db = getFirestore(app);
+show('authScreen');
+onAuthStateChanged(auth, (user) => { if (user) startSession(user); else if (me) endSession(); else show('authScreen'); });
+}
+</script>
+</body>
+</html>
