@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የእባብ ጨዋታ (Snake Game)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+            margin: 0;
+            padding: 10px;
+        }
+        h1 {
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        #scoreBoard {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        /* የጨዋታው ሜዳ */
+        canvas {
+            background-color: #111;
+            border: 4px solid #fff;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        /* በስልክ ለመጫወት መቆጣጠሪያ በተኖች */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .btn {
+            width: 60px;
+            height: 60px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .btn:active {
+            background-color: #666;
+        }
+        #up { grid-column: 2; }
+        #left { grid-column: 1; }
+        #right { grid-column: 3; }
+        #down { grid-column: 2; }
+    </style>
+</head>
+<body>
+
+    <h1>የእባብ ጨዋታ</h1>
+    <div id="scoreBoard">ውጤት: 0</div>
+
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+
+    <!-- የስልክ መቆጣጠሪያ -->
+    <div class="controls">
+        <button class="btn" id="up" onclick="changeDirection('UP')">▲</button>
+        <button class="btn" id="left" onclick="changeDirection('LEFT')">◀</button>
+        <button class="btn" id="right" onclick="changeDirection('RIGHT')">▶</button>
+        <button class="btn" id="down" onclick="changeDirection('DOWN')">▼</button>
+    </div>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const box = 15; // የእያንዳንዱ ሳጥን መጠን
+    let snake = [];
+    snake[0] = { x: 10 * box, y: 10 * box }; // የእባቡ መነሻ ቦታ
+
+    let food = {
+        x: Math.floor(Math.random() * 19 + 1) * box,
+        y: Math.floor(Math.random() * 19 + 1) * box
+    };
+
+    let score = 0;
+    let d = "RIGHT"; // መነሻ አቅጣጫ
+    let game;
+
+    // አቅጣጫ ለመቀየር
+    function changeDirection(direction) {
+        if (direction === "LEFT" && d !== "RIGHT") d = "LEFT";
+        if (direction === "UP" && d !== "DOWN") d = "UP";
+        if (direction === "RIGHT" && d !== "LEFT") d = "RIGHT";
+        if (direction === "DOWN" && d !== "UP") d = "DOWN";
+    }
+
+    // ራስን ወይም ግድግዳን መጋጨት ማረጋገጫ
+    function collision(head, array) {
+        for (let i = 0; i < array.length; i++) {
+            if (head.x === array[i].x && head.y === array[i].y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ሁሉንም ነገር በሜዳው ላይ መሳል
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // እባቡን መሳል
+        for (let i = 0; i < snake.length; i++) {
+            ctx.fillStyle = (i === 0) ? "#4CAF50" : "#81C784";
+            ctx.fillRect(snake[i].x, snake[i].y, box, box);
+            ctx.strokeStyle = "#111";
+            ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+        }
+
+        // ፍሬዋን መሳል
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x, food.y, box, box);
+
+        // የድሮው የራስ ቦታ
+        let snakeX = snake[0].x;
+        let snakeY = snake[0].y;
+
+        // አቅጣጫን መከተል
+        if (d === "LEFT") snakeX -= box;
+        if (d === "UP") snakeY -= box;
+        if (d === "RIGHT") snakeX += box;
+        if (d === "DOWN") snakeY += box;
+
+        // እባቡ ፍሬዋን ከበላ
+        if (snakeX === food.x && snakeY === food.y) {
+            score++;
+            document.getElementById("scoreBoard").innerText = "ውጤት: " + score;
+            food = {
+                x: Math.floor(Math.random() * 19 + 1) * box,
+                y: Math.floor(Math.random() * 19 + 1) * box
+            };
+        } else {
+            // ጭራውን ማንሳት (ካልበላ አይረዝምም)
+            snake.pop();
+        }
+
+        // አዲስ ራስ መጨመር
+        let newHead = { x: snakeX, y: snakeY };
+
+        // ጨዋታው የሚያልቅበት ሁኔታ (ግድግዳ ወይም ራስን ሲነክስ)
+        if (snakeX < 0 || snakeX > canvas.width - box || snakeY < 0 || snakeY > canvas.height - box || collision(newHead, snake)) {
+            clearInterval(game);
+            alert("ጨዋታው ተጠናቋል! ውጤትዎ: " + score);
+            location.reload(); // ጨዋታውን እንደገና ለመጀመር
+        }
+
+        snake.unshift(newHead);
+    }
+
+    // ጨዋታውን በየ 120 ሚሊሰከንድ ማደስ (ፍጥነት)
+    game = setInterval(draw, 120);
+</script>
+
+</body>
+</html>
